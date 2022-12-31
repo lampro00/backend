@@ -23,10 +23,6 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Product.fetchAll((products) => {
-    res.status(200).send("shop", {
-      prods: products,
-      pageTitle: "Shop",
-      path: "/",
-    });
+    res.status(200).send(JSON.stringify(products));
   });
 };

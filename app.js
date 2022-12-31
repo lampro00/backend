@@ -1,17 +1,21 @@
-const express = require("express");
-const app = express();
-const bodyParse = require("body-parser");
-const adminRouter = require("./Routers/admin");
-const shopRouter = require("./Routers/shop");
 const path = require("path");
-app.use(bodyParse.urlencoded({ extended: false }));
-const rootDirname = require("./ulti/path");
+
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const errorController = require("./Controller/error");
+
+const app = express();
+
+const adminRoutes = require("./Routers/admin");
+const shopRoutes = require("./Routers/shop");
+
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-app.set("view engine", "pug");
-app.set("views", "views");
-app.use("/admin", adminRouter.routes);
-app.use(shopRouter);
-app.use((req, res, next) => {
-  res.status(404).render("404page", { pageTitle: "Page Not Found" });
-});
-app.listen(3000, console.log("sever chạy ở port 3000"));
+
+app.use("/admin", adminRoutes);
+app.use(shopRoutes);
+
+app.use(errorController.get404);
+
+app.listen(5000, console.log("đang chạy"));

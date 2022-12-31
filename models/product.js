@@ -2,8 +2,11 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports = class Product {
-  constructor(t) {
+  constructor(t, i, d, p) {
     this.title = t;
+    this.imageUrl = i;
+    this.description = d;
+    this.price = p;
   }
 
   save() {
@@ -26,7 +29,7 @@ module.exports = class Product {
 
   static fetchAll(cb) {
     const p = path.join(
-      path.dirname(process.main.filename),
+      path.dirname(require.main.filename),
       "data",
       "products.json"
     );

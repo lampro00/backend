@@ -33,7 +33,7 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  Product.findByPk(prodId).then((product) => {
+  Product.findAll({ where: { id: prodId } }).then((product) => {
     if (!product) {
       return res.redirect("/");
     }

@@ -15,7 +15,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  const product = Product.findByPk(prodId).then((product) =>
+  const product = Product.findAll({ where: { id: prodId } }).then((product) =>
     res.render("shop/product-detail", {
       product: product.dataValues,
       pageTitle: product.dataValues.title,
@@ -59,15 +59,15 @@ exports.getCart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
+  Product.findAll({ where: { id: prodId } }).then((product) => {
     Cart.addProduct(prodId, product.price);
+    res.redirect("/cart");
   });
-  res.redirect("/cart");
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
+  Product.findAll({ where: { id: prodId } }).then((product) => {
     Cart.deleteProduct(prodId, product.price);
     res.redirect("/cart");
   });

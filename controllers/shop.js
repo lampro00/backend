@@ -3,8 +3,9 @@ const User = require("../models/users");
 // const Order = require("../models/order");
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((product) => {
+      console.log(product);
       res.render("shop/product-list", {
         prods: product,
         pageTitle: "All Products",
@@ -26,7 +27,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((product) => {
       res.render("shop/index", {
         prods: product,

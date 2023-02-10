@@ -119,14 +119,12 @@ exports.postCartDeleteProduct = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  req.user
-    .getOrders()
+  Order.find({ "user.userId": req.user._id })
     .then((orders) => {
-      console.log(orders);
       res.render("shop/orders", {
         path: "/orders",
         pageTitle: "Your Orders",
-        order: orders,
+        orders: orders,
       });
     })
     .catch((err) => console.log(err));
@@ -138,7 +136,7 @@ exports.postOrder = (req, res, next) => {
     // .execPopulate()
     .then((productsa) => {
       const products = productsa.cart.items.map((i) => {
-        return { quantity: i.quantity, product: i.productId };
+        return { quantity: i.quantity, product: { ...i.productId._doc } };
       });
       console.log(req.user.user);
       const order = new Order({

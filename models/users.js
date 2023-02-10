@@ -1,3 +1,55 @@
+const mongoose = require("mongoose");
+const schema = mongoose.Schema;
+const UserSchema = new schema({
+  user: {
+    type: String,
+    required: true,
+  },
+  email: { type: String, required: true },
+  cart: {
+    items: [
+      {
+        productId: {
+          type: schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: { type: Number, required: true },
+      },
+    ],
+  },
+});
+UserSchema.methods.addToCart = function (product) {
+  const cartProductIndex = this.cart.items.findIndex((cp) => {
+    return cp.productId.toString() == product._id.toString();
+  });
+  let newquantity = 1;
+  const updatedCartItems = [...this.cart.items];
+  if (cartProductIndex >= 0) {
+    console.log("ok");
+    newquantity = this.cart.items[cartProductIndex].quantity + 1;
+    updatedCartItems[cartProductIndex].quantity = newquantity;
+  } else {
+    updatedCartItems.push({
+      productId: product._id,
+      quantity: newquantity,
+    });
+  }
+  const updatedCart = {
+    items: updatedCartItems,
+  };
+  this.cart = updatedCart;
+  return this.save();
+};
+UserSchema.methods.deleteOrderInCart = function (prodId) {
+  const update = this.cart.items.filter((item) => {
+    console.log(prodId, item.productId);
+    return item._id.toString() !== prodId.toString();
+  });
+  this.cart.items = update;
+  return this.save();
+};
+module.exports = mongoose.model("User", UserSchema);
 // const mongo = require("mongodb");
 // const getDb = require("../util/database").getDb;
 // class user {
@@ -76,26 +128,7 @@
 //     );
 //   }
 //   getcart() {
-//     const db = getDb();
-//     const productidi = this.cart.items.map((id) => {
-//       return id.prodId;
-//     });
-//     // console.log(productidi);
-//     return db
-//       .collection("products")
-//       .find({ _id: { $in: productidi } })
-//       .toArray()
-//       .then((products) => {
-//         console.log(products);
-//         return products.map((product) => {
-//           return {
-//             ...product,
-//             quantity: this.cart.items.find((q) => {
-//               return q.prodId.toString() === product._id.toString();
-//             }).quantity,
-//           };
-//         });
-//       });
+// /
 //   }
 //   deleteproductincart(prodId) {
 //     const update = this.cart.items.filter((item) => {

@@ -17,6 +17,11 @@ const ProductSchema = new schema({
     type: String,
     require: true,
   },
+  userId: {
+    type: schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
 // const monggo = require("mongodb");
